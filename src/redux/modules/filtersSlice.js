@@ -1,5 +1,10 @@
+export const StatusFilters = {
+    All: 'all',
+    Active: 'active',
+    Completed: 'completed',
+}
 const initialState = {
-    status: 'All',
+    status: StatusFilters.All,
     colors: [],
 }
 
@@ -30,6 +35,8 @@ export default function filtersReducer(state = initialState, action = {}) {
                     }
                     return state;
                 }
+                default: 
+                    return state;
             }
         }
         default:
@@ -38,3 +45,4 @@ export default function filtersReducer(state = initialState, action = {}) {
             return state;
     }
 }
+
