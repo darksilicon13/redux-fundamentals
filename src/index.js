@@ -5,6 +5,9 @@ import App from './App'
 import { Provider } from 'react-redux'
 import './api/server'
 import store from './redux/store'
+import { fetchTodos } from './redux/modules/todosSlice'
+
+store.dispatch(fetchTodos);
 
 ReactDOM.render(
   <React.StrictMode>

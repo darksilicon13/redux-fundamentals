@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo } from '../../redux/modules/todosSlice';
+import { saveNewTodo } from '../../redux/modules/todosSlice';
 
 const Header = () => {
     const [text, setText] = useState('');
@@ -12,7 +12,10 @@ const Header = () => {
         const trimmedText = text.trim();
 
         if (e.key === 'Enter' && trimmedText) {
-            dispatch(addTodo(trimmedText));
+            // dispatch(addTodo(trimmedText));
+
+            dispatch(saveNewTodo(trimmedText));
+
             setText('');
         }
     }
