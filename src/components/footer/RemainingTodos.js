@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 const RemainingTodos = () => {
 
-    const todos = useSelector(state=>state.todos.entities)
+    const todos = useSelector(state=>Object.values(state.todos.entities))
         .filter(todo => !todo.completed)
         .length;
     const suffix = todos === 1 ? '' : 's'
