@@ -11,9 +11,27 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 
-export const selectTodos = state => state.todos;
-
-export const selectCompletedTodos = state => state.todos.filter(todo => todo.completed);
+export const selectTodos = state => state.todos
+.filter(todo => {
+    switch(state.filters.status) {
+        case 'all':
+            return todo;
+        case 'active':
+            return !todo.completed;
+        case 'completed': 
+            return todo.completed;
+        default:
+            return null;
+    }
+})
+.filter(todo=> {
+    if(!state.filters.colors.length) {
+        return todo;
+    } else {
+        return state.filters.colors.includes(todo.color)
+    }
+}
+);
 
 export const selectTotalCompletedTodos = state => {
     const completedTodos = state.todos.filter(todo => todo.completed);

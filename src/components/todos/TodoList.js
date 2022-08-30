@@ -1,10 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectTodos } from '../redux/reducer';
+import { selectTodos } from '../../redux/reducer';
 import TodoListItem from './TodoListItem';
 
 const TodoList = () => {
 
+    console.log("TodoList rendered");
     const todos = useSelector(selectTodos);
 
     const renderedTodos = todos.map(todo => (

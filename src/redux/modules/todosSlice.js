@@ -9,6 +9,31 @@ function nextTodoId(todos) {
     return maxId + 1;
 }
 
+export const addTodo = (payload) => {
+    return {type: 'todos/todoAdded', payload}
+}
+
+export const toggleTodo = (payload) => {
+    return {type: 'todos/todoToggled', payload}
+}
+
+export const selectColor = ({todoId, color}) => {
+    return {type: 'todos/colorSelected', payload:{todoId, color}}
+}
+
+export const deleteTodo = (payload) => {
+    return {type: 'todos/todoDeleted', payload}
+}
+
+export const completeAll = () => {
+    return {type: 'todos/allCompleted'}
+}
+
+export const clearCompleted = () => {
+    return {type: 'todos/completedCleared'}
+}
+
+
 // use the initialState as a default value
 export default function todosReducer(state = initialState, action = {}) {
     // The reducer normally looks at the action type field to decide what happens

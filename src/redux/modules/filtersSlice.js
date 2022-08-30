@@ -8,6 +8,14 @@ const initialState = {
     colors: [],
 }
 
+export const changeStatus = (payload) => {
+    return {type: 'filters/statusFilterChanged', payload};
+}
+
+export const changeColor = ({color, changeType}) => {
+    return {type: 'filters/colorFilterChanged', payload: {color, changeType}}
+}
+
 // use the initialState as a default value
 export default function filtersReducer(state = initialState, action = {}) {
     // The reducer normally looks at the action type field to decide what happens

@@ -1,7 +1,7 @@
 import React from 'react'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import TodoList from './components/TodoList'
+import Footer from './components/footer/Footer'
+import Header from './components/header/Header'
+import TodoList from './components/todos/TodoList'
 
 function App() {
   return (
