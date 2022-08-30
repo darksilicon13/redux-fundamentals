@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 
-export const selectTodos = state => state.todos
+export const selectTodos = state => state.todos.entities
 .filter(todo => {
     switch(state.filters.status) {
         case 'all':
@@ -34,6 +34,6 @@ export const selectTodos = state => state.todos
 );
 
 export const selectTotalCompletedTodos = state => {
-    const completedTodos = state.todos.filter(todo => todo.completed);
+    const completedTodos = state.todos.entities.filter(todo => todo.completed);
     return completedTodos.length;
 }

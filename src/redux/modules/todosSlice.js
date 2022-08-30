@@ -1,18 +1,21 @@
 import { client } from '../../api/client';
 
 
-const initialState = [
-    { id: 0, text: 'Learn React', completed: true },
-    { id: 1, text: 'Learn Redux', completed: false, color: 'purple' },
-    { id: 2, text: 'Build Something fun!', completed: false, color: 'blue' },
-]
+const initialState = {
+    status: 'idle',
+    entities: [],
+}
 
 // function nextTodoId(todos) {
 //     const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1);
 //     return maxId + 1;
 // }
 
-export const loadTodos = (payload) => {
+export const loadingTodos = () => {
+    return {type: 'todos/todosLoading'}
+}
+
+export const loadedTodos = (payload) => {
     return { type: 'todos/todosLoaded', payload };
 }
 
@@ -46,45 +49,63 @@ export default function todosReducer(state = initialState, action = {}) {
     // The reducer normally looks at the action type field to decide what happens
     switch (action.type) {
         // Do something here based on the different types of actions
+        case 'todos/todosLoading': {
+            return {...state, status: 'loading'}
+        }
         case 'todos/todosLoaded': {
-            return action.payload;
+            return {...state, status: 'idle', entities: action.payload};
         }
         case 'todos/todoAdded': {
-            return [
+            return {
                 ...state,
-                action.payload,
-            ];
+                entities: [...state.entities, action.payload],
+            };
         }
         case 'todos/todoToggled': {
-            return state.map(todo => {
-                if (todo.id !== action.payload) {
-                    return todo;
-                }
-                return { ...todo, completed: !todo.completed };
-            });
+            return {
+                ...state,
+                entities: state.entities.map(todo => {
+                    if (todo.id !== action.payload) {
+                        return todo;
+                    }
+                    return { ...todo, completed: !todo.completed };
+                })
+            }
         }
         case 'todos/colorSelected': {
-            return state.map(todo => {
-                if (todo.id !== action.payload.todoId) {
-                    return todo;
-                }
-                return { ...todo, color: action.payload.color };
-            });
+            return {
+                ...state,
+                entities: state.entities.map(todo => {
+                    if (todo.id !== action.payload.todoId) {
+                        return todo;
+                    }
+                    return { ...todo, color: action.payload.color };
+                })
+            }
         }
         case 'todos/todoDeleted': {
-            return state.filter(todo =>
-                todo.id !== action.payload
-            );
+            return {
+                ...state,
+                entities: state.entities.filter(todo =>
+                    todo.id !== action.payload
+                )
+            }
         }
         case 'todos/allCompleted': {
-            return state.map(todo => {
-                return { ...todo, completed: true };
-            });
+            return {
+                ...state,
+                entities: state.entities.map(todo => {
+                    return { ...todo, completed: true };
+                })
+            }
         }
         case 'todos/completedCleared': {
-            return state.filter(todo =>
-                todo.completed === false
-            )
+            return {
+                ...state,
+                entities: state.entities.filter(todo =>
+                    todo.completed === false
+                )
+            }
         }
         default:
             // If this reducer doesn't recognize the action type, or doesn't 
@@ -95,16 +116,15 @@ export default function todosReducer(state = initialState, action = {}) {
 
 // Thunk function
 export async function fetchTodos(dispatch, getState) {
+    dispatch(loadingTodos());
     const response = await client.get('/fakeApi/todos');
-    console.log(response);
-    dispatch(loadTodos(response.todos));
+    dispatch(loadedTodos(response.todos));
 }
 
 export function saveNewTodo(text) {
     return async function saveNewTodoThunk(dispatch, getState) {
-        const initialTodo = {text};
-        const response = await client.post('/fakeApi/todos',{todo: initialTodo});
-        console.log(response)
+        const initialTodo = { text };
+        const response = await client.post('/fakeApi/todos', { todo: initialTodo });
         dispatch(addTodo(response.todo));
     }
 }
