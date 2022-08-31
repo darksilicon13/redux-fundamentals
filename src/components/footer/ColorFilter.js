@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { colorFilterChanged } from '../../redux/modules/filtersSlice';
-import {availableColors, capitalize} from '../colors';
+import {availableColors, capitalize} from '../../redux/modules/colors';
 
 const ColorFilter = () => {
 

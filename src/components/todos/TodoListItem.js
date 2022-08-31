@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { todoDeleted, colorSelected, todoToggled } from '../../redux/modules/todosSlice';
-import { availableColors, capitalize } from '../colors';
+import { availableColors, capitalize } from '../../redux/modules/colors';
 import { ReactComponent as TimesSolid } from './times-solid.svg';
 
 const TodoListItem = ({ id, text, completed, color }) => {
