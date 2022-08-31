@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteTodo, selectColor, toggleTodo } from '../../redux/modules/todosSlice';
+import { todoDeleted, colorSelected, todoToggled } from '../../redux/modules/todosSlice';
 import { availableColors, capitalize } from '../colors';
 import { ReactComponent as TimesSolid } from './times-solid.svg';
 
@@ -16,15 +16,15 @@ const TodoListItem = ({ id, text, completed, color }) => {
     ))
 
     const onDelete = () => {
-        dispatch(deleteTodo(id));
+        dispatch(todoDeleted(id));
     }
 
     const onColorChanged = e => {
-        dispatch(selectColor({ todoId: id, color: e.target.value }));
+        dispatch(colorSelected({ todoId: id, color: e.target.value }));
     }
 
     const onToggle = () => {
-        dispatch(toggleTodo(id));
+        dispatch(todoToggled(id));
     }
 
     const listClass = completed ? 'completed' : ''

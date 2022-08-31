@@ -1,16 +1,16 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { clearCompleted, completeAll } from '../../redux/modules/todosSlice';
+import { allCompleted, completedCleared } from '../../redux/modules/todosSlice';
 
 const Actions = () => {
     const dispatch = useDispatch();
 
     const completedAllTodos = () => {
-        dispatch(completeAll());
+        dispatch(allCompleted());
     }
 
     const completedAllClear = () => {
-        dispatch(clearCompleted());
+        dispatch(completedCleared());
     }
 
     return (
