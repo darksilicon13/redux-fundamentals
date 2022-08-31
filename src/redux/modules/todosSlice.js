@@ -1,10 +1,10 @@
 import { client } from '../../api/client';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
-    status: 'idle',
-    entities: {},
-}
+// const initialState = {
+//     status: 'idle',
+//     entities: {},
+// }
 
 // function nextTodoId(todos) {
 //     const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1);
@@ -156,6 +156,13 @@ const initialState = {
 
 // Redux Toolkit
 
+
+const todosAdapter = createEntityAdapter();
+
+const initialState = todosAdapter.getInitialState({
+    status: 'idle'
+})
+
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
     const response = await client.get('/fakeApi/todos');
     return response.todos;
@@ -193,44 +200,38 @@ const todoSlice = createSlice({
             const { todoId, color } = action.payload;
             state.entities[todoId].color = color;
         },
-        todoDeleted: (state, action) => {
-            const todoId = action.payload;
-            delete state.entities[todoId];
-        },
+        todoDeleted: todosAdapter.removeOne,
         allCompleted: (state) => {
             Object.values(state.entities).forEach(todo => {
                 todo.completed = true;
             })
         },
         completedCleared: (state) => {
-            Object.values(state.entities).forEach(todo => {
-                if (todo.completed) {
-                    delete state.entities[todo.id];
-                }
-            })
+            const completedIds = Object.values(state.entities)
+                .filter(todo => todo.completed)
+                .map(todo => todo.id)
+
+            todosAdapter.removeMany(state, completedIds);
         },
     },
     extraReducers: builder => {
         builder
-        .addCase(fetchTodos.pending, (state, action) => {
-            state.status = 'loading';
-        })
-        .addCase(fetchTodos.fulfilled, (state, action) => {
-            const newEntities = {};
-            action.payload.forEach(todo => {
-                newEntities[todo.id] = todo
+            .addCase(fetchTodos.pending, (state, action) => {
+                state.status = 'loading';
             })
-            state.entities = newEntities;
-            state.status = 'idle';
-        })
-        .addCase(saveNewTodo.fulfilled, (state, action) => {
-            const todo = action.payload;
-            state.entities[todo.id] = todo;
-        })
+            .addCase(fetchTodos.fulfilled, (state, action) => {
+                const newEntities = {};
+                action.payload.forEach(todo => {
+                    newEntities[todo.id] = todo
+                })
+                state.entities = newEntities;
+                state.status = 'idle';
+            })
+            .addCase(saveNewTodo.fulfilled, todosAdapter.addOne)
     }
 })
 
-export const { 
+export const {
     todosLoading,
     todosLoaded,
     todoAdded,
