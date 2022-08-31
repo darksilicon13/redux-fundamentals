@@ -7,7 +7,7 @@ import './api/server'
 import store from './redux/store'
 import { fetchTodos } from './redux/modules/todosSlice'
 
-store.dispatch(fetchTodos);
+store.dispatch(fetchTodos());
 
 ReactDOM.render(
   <React.StrictMode>

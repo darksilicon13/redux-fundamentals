@@ -1,5 +1,5 @@
 import { client } from '../../api/client';
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     status: 'idle',
@@ -135,22 +135,37 @@ const initialState = {
 //     }
 // }
 
-// Thunk function
-export async function fetchTodos(dispatch, getState) {
-    dispatch(todosLoading());
-    const response = await client.get('/fakeApi/todos');
-    dispatch(todosLoaded(response.todos));
-}
+// // Thunk function
+// export async function fetchTodos(dispatch, getState) {
+//     dispatch(todosLoading());
+//     const response = await client.get('/fakeApi/todos');
+//     dispatch(todosLoaded(response.todos));
+// }
 
-export function saveNewTodo(text) {
-    return async function saveNewTodoThunk(dispatch, getState) {
-        const initialTodo = { text };
-        const response = await client.post('/fakeApi/todos', { todo: initialTodo });
-        dispatch(todoAdded(response.todo));
-    }
-}
+
+
+// export function saveNewTodo(text) {
+//     return async function saveNewTodoThunk(dispatch, getState) {
+//         const initialTodo = { text };
+//         const response = await client.post('/fakeApi/todos', { todo: initialTodo });
+//         dispatch(todoAdded(response.todo));
+//     }
+// }
+
+
 
 // Redux Toolkit
+
+export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
+    const response = await client.get('/fakeApi/todos');
+    return response.todos;
+})
+
+export const saveNewTodo = createAsyncThunk('todos/saveNewTodo', async (text) => {
+    const initialTodo = { text };
+    const response = await client.post('/fakeApi/todos', { todo: initialTodo });
+    return response.todo;
+})
 
 const todoSlice = createSlice({
     name: 'todos',
@@ -194,10 +209,29 @@ const todoSlice = createSlice({
                 }
             })
         },
+    },
+    extraReducers: builder => {
+        builder
+        .addCase(fetchTodos.pending, (state, action) => {
+            state.status = 'loading';
+        })
+        .addCase(fetchTodos.fulfilled, (state, action) => {
+            const newEntities = {};
+            action.payload.forEach(todo => {
+                newEntities[todo.id] = todo
+            })
+            state.entities = newEntities;
+            state.status = 'idle';
+        })
+        .addCase(saveNewTodo.fulfilled, (state, action) => {
+            const todo = action.payload;
+            state.entities[todo.id] = todo;
+        })
     }
 })
 
-export const { todosLoading,
+export const { 
+    todosLoading,
     todosLoaded,
     todoAdded,
     todoToggled,
