@@ -1,13 +1,13 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeStatus, StatusFilters } from '../../redux/modules/filtersSlice';
+import { statusFilterChanged, StatusFilters } from '../../redux/modules/filtersSlice';
 
 const StatusFilter = () => {
 
     const dispatch = useDispatch();
 
     const statusSelected = (option) => {
-        dispatch(changeStatus(option))
+        dispatch(statusFilterChanged(option))
     }
 
     const status = useSelector(state => state.filters.status);

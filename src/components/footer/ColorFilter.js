@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeColor } from '../../redux/modules/filtersSlice';
+import { colorFilterChanged } from '../../redux/modules/filtersSlice';
 import {availableColors, capitalize} from '../colors';
 
 const ColorFilter = () => {
@@ -8,7 +8,7 @@ const ColorFilter = () => {
     const dispatch = useDispatch();
 
     const colorsSelected = (color, changeType) => {
-        dispatch(changeColor({ color, changeType }));
+        dispatch(colorFilterChanged({ color, changeType }));
     }
     const colors = useSelector(state => state.filters.colors);
     const colorFilters = availableColors.map(color => {
