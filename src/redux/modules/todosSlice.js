@@ -184,12 +184,14 @@ const todoSlice = createSlice({
         },
         allCompleted: (state) => {
             Object.values(state.entities).forEach(todo => {
-                state.entities[todo.id].completed = true;
+                todo.completed = true;
             })
         },
         completedCleared: (state) => {
             Object.values(state.entities).forEach(todo => {
-                delete state.entities[todo.id];
+                if (todo.completed) {
+                    delete state.entities[todo.id];
+                }
             })
         },
     }
